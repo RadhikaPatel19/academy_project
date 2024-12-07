@@ -8,7 +8,7 @@ use App\Http\Controllers\QuizController;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-
+Route::view('home', 'user.home');
 
 Route::get('/', function () {
     return redirect()->route(auth()->check() ? 'dashboard' : 'showLogin');

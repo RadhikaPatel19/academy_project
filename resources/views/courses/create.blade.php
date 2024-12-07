@@ -236,6 +236,33 @@
         }
     }
 </style>
+<link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+
+<!-- Include JS for EasyMDE -->
+<script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+
+<!--<script>
+    // Initialize EasyMDE for the description field
+    const easyMDE = new EasyMDE({
+        element: document.getElementById('description'),
+        spellChecker: false, // Optional: Disable spellchecker
+        placeholder: "Type your markdown here...",
+    });
+</script> -->
+
+<script>
+    // Initialize EasyMDE
+    const easyMDE = new EasyMDE({
+        element: document.getElementById('description'),
+        spellChecker: false, // Optional: Disable spellchecker
+        placeholder: "Type your markdown here...",
+    });
+
+    // Sync EasyMDE content to textarea before form submission
+    document.querySelector('.course-form').addEventListener('submit', function(event) {
+        easyMDE.toTextArea(); // Sync the content
+    });
+</script>
 <script>
     document.querySelectorAll('input[name="pricing_type"]').forEach(radio => {
         radio.addEventListener('change', function() {
