@@ -121,4 +121,21 @@ class CourseController extends Controller
 
         return redirect()->route('courses.index')->with('success', 'Course deleted successfully!');
     }
+    public function index1()
+    {
+        $categories = Category::all();
+
+        $course = Course::all(); // Fetch all courses from the database
+        // dd(Course::all()->pluck('thumbnail_image'));
+        // dd($course);
+        // dd($categories);
+        return view('user.home', compact('course', 'categories')); // Pass courses to the view
+    }
+
+    public function details($id)
+    {
+        $course = Course::findOrFail($id); // Fetch single course data from the database
+
+        return view('user.course', compact('course')); // Pass single course to the view
+    }
 }

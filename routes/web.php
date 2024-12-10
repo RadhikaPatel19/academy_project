@@ -9,6 +9,9 @@ use App\Http\Controllers\QuizController;
 //     return view('welcome');
 // });
 Route::view('home', 'user.home');
+Route::get('/index1', [CourseController::class, 'index1']);
+Route::get('/course/{id}', [CourseController::class, 'details'])->name('user.details');
+
 
 Route::get('/', function () {
     return redirect()->route(auth()->check() ? 'dashboard' : 'showLogin');
