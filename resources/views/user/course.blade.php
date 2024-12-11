@@ -4,16 +4,28 @@
 <div class="p-4 shadow">
     <div class="row align-items-center">
         <!-- Text Section -->
-        <div class="col-md-6 d-flex flex-column justify-content-center bg-light  ">
+        <div class="col-md-6 d-flex flex-column justify-content-center bg-light">
             <h1 class="display-4">Laravel Developer</h1>
             <p class="lead">Enhance your skills with Laravel development. Learn to build robust and scalable applications.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sit amet nisl magna. Proin gravida, erat ut sollicitudin tempus, neque sapien pellentesque massa, a cursus urna ex non libero. Morbi tristique nisl sed risus volutpat, in lacinia urna eleifend. Sed tincidunt purus id orci accumsan, eget venenatis justo tincidunt.</p>
+            <p>More content here to make scrolling effect visible...</p>
         </div>
+
         <!-- Image Section -->
         <div class="col-md-6">
-            <img src="https://via.placeholder.com/600x400" class="img-fluid rounded" alt="Laravel Developer">
+            <div class="card mx-auto fixed-image-section">
+                <img src="https://via.placeholder.com/300" class="card-img-top" alt="Product">
+                <div class="card-body">
+                    <h6 class="card-title">Smartphone Case</h6>
+                    <p class="text-warning mb-1">★★★★★</p>
+                    <p class="card-text">$15.00</p>
+                    <button class="btn btn-primary add-to-cart">Add to Cart</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
 
 
 
@@ -205,5 +217,37 @@
     .learn {
         margin-top: 7%;
     }
+
+    /* .fixed-card {
+        position: fixed;
+        top: 20%;
+        right: 5%;
+        z-index: 1000;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    } */
+
+    .fixed-image-section {
+        position: fixed;
+        top: 100px;
+        /* Adjust this value to control the offset from the top */
+        right: 150px;
+        /* Keep the image section fixed on the right side */
+        z-index: 1000;
+        /* Ensure it stays on top of other elements */
+        width: 18rem;
+        /* Set a fixed width to the image section */
+    }
+
+    @media (max-width: 768px) {
+        .fixed-image-section {
+            position: static;
+            /* Disable the fixed behavior on smaller screens */
+            width: auto;
+            /* Make it responsive */
+        }
+    }
+</style>
+<style>
+
 </style>
 @endsection
