@@ -11,8 +11,9 @@
                 <li class="nav-item"><a class="nav-link" href="#">Shop</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Cart</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('faq.index') }}">FAQ</a></li>
             </ul>
-            <ul class="navbar-nav">
+            <ul class=" navbar-nav">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>

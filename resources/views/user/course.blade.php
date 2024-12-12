@@ -10,7 +10,37 @@
                 <h1 class="display-4 firsttitle">{{ $course->title }}</h1>
                 <p class="lead firstdescription">{{ $course->short_description }}</p>
                 <p class="lead firstshortdescription">{{ $course->description }}</p>
-                <p class="text-warning mb-1">★★★★★</p>
+
+                <p class="lead firstshortdescription">
+                <h2>Enrolled Students</h2>
+                <ul>
+                    @foreach ($enrolledStudents as $enrolled)
+                    <li>{{ $enrolled->user->name }}</li> <!-- Display student name -->
+                    @endforeach
+                </ul>
+
+                <!-- You can add a success message here -->
+                @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+                @endif
+                </p>
+                <!-- <p class="text-warning mb-1"> ({{ $ratingsCount }} ratings)</p> -->
+                <p class="text-warning mb-1">Rating:
+                    @php
+                    $fullStars = floor($averageRating);
+                    $halfStar = ($averageRating - $fullStars >= 0.5) ? 1 : 0;
+                    @endphp
+                    <span id="star-rating" data-course-id="{{ $course->id }}">
+                        @for ($i = 1; $i <= 5; $i++)
+                            <span class="star {{ $i <= $fullStars ? 'filled' : '' }}" data-value="{{ $i }}">
+                            ★
+                    </span>
+                    @endfor
+                    </span>
+                    <!-- ({{ $ratingsCount }} ratings) -->
+                </p>
             </div>
         </div>
 
@@ -40,8 +70,24 @@
                     alt="{{ $course->title }}">
                 <div class="card-body">
                     <h6 class="card-title">{{ $course->title }}</h6>
-                    <p class="text-warning mb-1">★★★★★</p>
-                    <p class="card-text">$${{ $course->price }}</p>
+                    <!-- <p class="text-warning mb-1">★★★★★</p> -->
+                    <p>Rating:
+                        @php
+                        $fullStars = floor($averageRating);
+                        $halfStar = ($averageRating - $fullStars >= 0.5) ? 1 : 0;
+                        @endphp
+                        <span id="star-rating" data-course-id="{{ $course->id }}">
+                            @for ($i = 1; $i <= 5; $i++)
+                                <span class="star {{ $i <= $fullStars ? 'filled' : '' }}" data-value="{{ $i }}">
+                                ★
+                        </span>
+                        @endfor
+                        </span>
+                        <!-- ({{ $ratingsCount }} ratings) -->
+                    </p>
+
+                    <p class="card-text">{{ $course->short_description }}</p>
+                    <p class="card-text">${{ $course->price }}</p>
                     <button class="btn btn-primary add-to-cart">Add to Cart</button>
                 </div>
             </div>
@@ -227,28 +273,6 @@
     </div>
 </div>
 
-<!-- <div class="container">
-    <div class="row">
-        <div class="col-md-6 mb-4">
-            <div>
-                <div class="card-body">
-                    <h3 class="mb-4">Requirements</h3>
-                    @if(!empty($course->requirements))
-                    @foreach (explode("\n", $course->requirements) as $requirement)
-                    <p>
-                        <i class="fa fa-circle" aria-hidden="true" style="font-size: 10px; margin-right: 8px;"></i>
-                        {{ $requirement }}
-                    </p>
-                    @endforeach
-                    @else
-                    <p>No specific requirements listed for this course.</p>
-                    @endif
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
-
 <div class="container">
     <div class="row">
         <div class="col-md-6 mb-4">
@@ -321,7 +345,7 @@
 </div>
 
 
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     // Toggle Requirements Section
     document.getElementById('toggleRequirements').addEventListener('click', function() {
@@ -369,6 +393,29 @@
 
             // Update the card's position as the user scrolls
             card.style.top = `${Math.max(250, scrollY - offsetTop + 250)}px`;
+        });
+    });
+
+    $(document).ready(function() {
+        $('.star').on('click', function() {
+            let rating = $(this).data('value');
+            let courseId = $('#star-rating').data('course-id');
+
+            $.ajax({
+                url: "{{ route('course.rate') }}", // Backend route to handle rating
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}', // CSRF token
+                    rating: rating,
+                    course_id: courseId
+                },
+                success: function(response) {
+                    alert(response.message); // Show success message
+                },
+                error: function(xhr) {
+                    alert('Something went wrong. Please try again.');
+                }
+            });
         });
     });
 </script>
@@ -426,6 +473,16 @@
         /* Make it responsive */
         transition: top 0.3s ease;
         /* Smooth transition */
+    }
+
+    .star {
+        font-size: 24px;
+        cursor: pointer;
+        color: #ccc;
+    }
+
+    .star.filled {
+        color: gold;
     }
 
     /* .fixed-image-section {

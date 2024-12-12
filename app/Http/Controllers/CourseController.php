@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Models\Category;
+use App\Models\EnrolledStudent;
 use Illuminate\Routing\Controller;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
@@ -124,39 +125,56 @@ class CourseController extends Controller
     public function index1()
     {
         $categories = Category::all();
-        $courses = Course::all(); // Fetch all courses from the database
+        // $courses = Course::all(); // Fetch all courses from the database
+        $courses = Course::with('ratings')->get();
         // dd($courses); // This will dump the courses and stop execution
 
+        foreach ($courses as $course) {
+            $course->averageRating = $course->ratings()->avg('rating'); // Calculate the average rating
+            $course->ratingsCount = $course->ratings()->count(); // Count the number of ratings
+        }
         return view('user.home', compact('courses', 'categories')); // Pass courses to the view
     }
-    // public function rate(Request $request, $id)
-    // {
-    //     $request->validate([
-    //         'rating' => 'required|integer|min:1|max:5',
-    //     ]);
 
-    //     $course = Course::findOrFail($id);
-
-    //     $course->ratings()->updateOrCreate(
-    //         ['user_id' => auth()->id()], // Prevent duplicate ratings by the same user
-    //         ['rating' => $request->rating]
-    //     );
-
-    //     return redirect()->route('user.course', $id)->with('success', 'Rating submitted successfully!');
-    // }
     public function details($id)
     {
 
-        $course = Course::findOrFail($id); // Fetch the course by ID
-        $lessons = $course->lessons; // Fetch associated lessons
+        // $course = Course::findOrFail($id); // Fetch the course by ID
+        // $lessons = $course->lessons; // Fetch associated lessons
+        // $categoryName = $course->category ? $course->category->name : 'No category'; // Fetch category
+
+        // return view('user.course', compact('course', 'lessons', 'categoryName'));
+        $course = Course::with('lessons', 'ratings', 'enrolledStudents.user')->findOrFail($id); // Fetch the course with lessons and ratings
+        $lessons = $course->lessons; // Associated lessons
         $categoryName = $course->category ? $course->category->name : 'No category'; // Fetch category
+        $averageRating = $course->ratings()->avg('rating'); // Calculate the average rating
+        $ratingsCount = $course->ratings()->count(); // Number of ratings
+        if (!EnrolledStudent::where('user_id', auth()->id())->where('course_id', $course->id)->exists()) {
+            // Automatically enroll the user
+            EnrolledStudent::create([
+                'user_id' => auth()->id(),
+                'course_id' => $course->id,
+            ]);
+        }
+        $enrolledStudents = $course->enrolledStudents;
+        return view('user.course', compact('course', 'lessons', 'categoryName', 'averageRating', 'ratingsCount', 'enrolledStudents'));
+    }
+    public function enrollInCourse($courseId)
+    {
+        $course = Course::findOrFail($courseId);
 
-        return view('user.course', compact('course', 'lessons', 'categoryName'));
-        // $course = Course::findOrFail($id); // Fetch single course data from the database
-        // $lessons = $course->lessons;
-        // $categoryName = $course->category ? $course->category->name : 'No category assigned';
+        // Check if the user is already enrolled
+        if (EnrolledStudent::where('user_id', auth()->id())->where('course_id', $courseId)->exists()) {
+            return redirect()->back()->with('error', 'You are already enrolled in this course.');
+        }
 
-        // return view('user.course', compact('course', 'lessons', 'categoryName')); // Pass single course to the view
+        // Enroll the user
+        EnrolledStudent::create([
+            'user_id' => auth()->id(),
+            'course_id' => $courseId,
+        ]);
+
+        return redirect()->route('user.details', ['id' => $courseId])->with('success', 'You have successfully enrolled in the course.');
     }
     public function addRequirement(Request $request, $id)
     {

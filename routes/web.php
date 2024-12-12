@@ -7,6 +7,8 @@ use App\Http\Controllers\QuizController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SectionController;
+use App\Http\Controllers\RatingController;
+use App\Http\Controllers\FAQController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -19,6 +21,10 @@ Route::post('/lessons/{courseId}', [LessonController::class, 'store'])->name('le
 Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
 Route::post('courses/{course}/sections', [SectionController::class, 'store'])->name('section.store');
 Route::post('/courses/{course}/add-requirement', [CourseController::class, 'addRequirement'])->name('courses.addRequirement');
+Route::post('/rate-course', [RatingController::class, 'store'])->name('course.rate');
+Route::post('/courses/{id}/enroll', [CourseController::class, 'enrollInCourse'])->name('course.enroll');
+
+Route::get('/faq', [FAQController::class, 'index'])->name('faq.index');
 // Route::get('/course/{id}', [CourseController::class, 'details'])->name('course.show');
 Route::get('/', function () {
     return redirect()->route(auth()->check() ? 'dashboard' : 'showLogin');
