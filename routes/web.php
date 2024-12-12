@@ -4,15 +4,22 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\QuizController;
+use App\Http\Controllers\LessonController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SectionController;
 
 // Route::get('/', function () {
 //     return view('welcome');
 // });
 Route::view('home', 'user.home');
 Route::get('/index1', [CourseController::class, 'index1']);
+//Route::get('/course/{id}', [CourseController::class, 'details'])->name('user.details');
 Route::get('/course/{id}', [CourseController::class, 'details'])->name('user.details');
-
-
+Route::post('/lessons/{courseId}', [LessonController::class, 'store'])->name('lessons.store');
+Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+Route::post('courses/{course}/sections', [SectionController::class, 'store'])->name('section.store');
+Route::post('/courses/{course}/add-requirement', [CourseController::class, 'addRequirement'])->name('courses.addRequirement');
+// Route::get('/course/{id}', [CourseController::class, 'details'])->name('course.show');
 Route::get('/', function () {
     return redirect()->route(auth()->check() ? 'dashboard' : 'showLogin');
 });

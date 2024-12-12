@@ -124,18 +124,55 @@ class CourseController extends Controller
     public function index1()
     {
         $categories = Category::all();
+        $courses = Course::all(); // Fetch all courses from the database
+        // dd($courses); // This will dump the courses and stop execution
 
-        $course = Course::all(); // Fetch all courses from the database
-        // dd(Course::all()->pluck('thumbnail_image'));
-        // dd($course);
-        // dd($categories);
-        return view('user.home', compact('course', 'categories')); // Pass courses to the view
+        return view('user.home', compact('courses', 'categories')); // Pass courses to the view
     }
+    // public function rate(Request $request, $id)
+    // {
+    //     $request->validate([
+    //         'rating' => 'required|integer|min:1|max:5',
+    //     ]);
 
+    //     $course = Course::findOrFail($id);
+
+    //     $course->ratings()->updateOrCreate(
+    //         ['user_id' => auth()->id()], // Prevent duplicate ratings by the same user
+    //         ['rating' => $request->rating]
+    //     );
+
+    //     return redirect()->route('user.course', $id)->with('success', 'Rating submitted successfully!');
+    // }
     public function details($id)
     {
-        $course = Course::findOrFail($id); // Fetch single course data from the database
 
-        return view('user.course', compact('course')); // Pass single course to the view
+        $course = Course::findOrFail($id); // Fetch the course by ID
+        $lessons = $course->lessons; // Fetch associated lessons
+        $categoryName = $course->category ? $course->category->name : 'No category'; // Fetch category
+
+        return view('user.course', compact('course', 'lessons', 'categoryName'));
+        // $course = Course::findOrFail($id); // Fetch single course data from the database
+        // $lessons = $course->lessons;
+        // $categoryName = $course->category ? $course->category->name : 'No category assigned';
+
+        // return view('user.course', compact('course', 'lessons', 'categoryName')); // Pass single course to the view
+    }
+    public function addRequirement(Request $request, $id)
+    {
+        $request->validate([
+            'requirement' => 'required|string|max:255',
+        ]);
+
+        $course = Course::findOrFail($id);
+
+        // Append the new requirement to the existing requirements
+        $newRequirement = $request->input('requirement');
+        $existingRequirements = $course->requirements ? $course->requirements . "\n" : '';
+        $course->requirements = $existingRequirements . $newRequirement;
+
+        $course->save();
+
+        return redirect()->back()->with('success', 'Requirement added successfully!');
     }
 }

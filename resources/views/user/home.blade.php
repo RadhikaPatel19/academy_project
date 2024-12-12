@@ -28,41 +28,37 @@
 <div class="container my-5">
     <div class="row">
         <!-- Card 1 -->
-        @if(isset($course) && $course->isNotEmpty())
-        @foreach ($course as $courses)
+        @if(isset($courses) && $courses->isNotEmpty())
+        @foreach ($courses as $course) <!-- Use $course here -->
         <div class="col-md-3">
             <div class="card">
-                <img src="{{ $courses->thumbnail_image && file_exists(storage_path('app/public/' . $courses->thumbnail_image)) 
-    ? asset('storage/' . $courses->thumbnail_image) 
-    : 'https://via.placeholder.com/300' }}"
+                <img src="{{ isset($course->thumbnail_image) && file_exists(storage_path('app/public/' . $course->thumbnail_image)) 
+                            ? asset('storage/' . $course->thumbnail_image) 
+                            : 'https://via.placeholder.com/300' }}"
                     class="card-img-top"
-                    alt="{{ $courses->title }}"
-                    class="card-img-top"
-                    alt="{{ $courses->title }}">
+                    alt="{{ $course->title }}"> <!-- Use $course here -->
 
-
-                <a href="{{ route('user.details', ['id' => $courses->id]) }}" class="text-decoration-none">
+                <a href="{{ route('user.details', ['id' => $course->id]) }}" class="text-decoration-none">
                     <div class="card-body">
-                        <h6 class="card-title">{{ $courses->title }}</h6>
+                        <h6 class="card-title">{{ $course->title }}</h6>
                         <p class="text-warning mb-1">★★★★★</p>
-                        <p class="card-text">${{ $courses->price }}</p>
+                        <p class="card-text">${{ $course->price }}</p>
                     </div>
                 </a>
             </div>
         </div>
         @endforeach
         @elseif(isset($courses))
-        <!-- Display single courses -->
+        <!-- Display single course -->
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <img src="{{ $courses->thumbnail_image && file_exists(storage_path('app/public/' . $courses->thumbnail_image)) 
-    ? asset('storage/' . $courses->thumbnail_image) 
-    : 'https://via.placeholder.com/300' }}"
+                    <img src="{{ isset($courses->thumbnail_image) && file_exists(storage_path('app/public/' . $courses->thumbnail_image)) 
+                            ? asset('storage/' . $courses->thumbnail_image) 
+                            : 'https://via.placeholder.com/300' }}"
                         class="card-img-top"
                         alt="{{ $courses->title }}">
-                    class="card-img-top"
-                    alt="{{ $courses->title }}">
+
                     <h6 class="card-title">{{ $courses->title }}</h6>
                     <p class="text-warning mb-1">★★★★★</p>
                     <p class="card-text">${{ $courses->price }}</p>
@@ -73,9 +69,10 @@
         @else
         <p>No courses available.</p>
         @endif
-
-        <!-- Card 2-->
-        <!-- <div class="col-md-3">
+    </div>
+</div>
+<!-- Card 2-->
+<!-- <div class="col-md-3">
                 <div class="card">
                     <img src="https://via.placeholder.com/300" class="card-img-top" alt="Product">
                     <div class="card-body">
@@ -89,8 +86,8 @@
                 </div>
             </div> -->
 
-        <!-- Card 3 -->
-        <!-- <div class="col-md-3">
+<!-- Card 3 -->
+<!-- <div class="col-md-3">
                 <div class="card">
                     <img src="https://via.placeholder.com/300" class="card-img-top" alt="Product">
                     <div class="card-body">
@@ -104,8 +101,8 @@
                 </div>
             </div> -->
 
-        <!-- Card 4 -->
-        <!-- <div class="col-md-3">
+<!-- Card 4 -->
+<!-- <div class="col-md-3">
                 <div class="card">
                     <img src="https://via.placeholder.com/300" class="card-img-top" alt="Product">
                     <div class="card-body">
@@ -118,7 +115,7 @@
                     </div>
                 </div>
             </div> -->
-    </div>
+</div>
 </div>
 
 

@@ -1,24 +1,47 @@
 @extends('user.userapp')
 @section('content')
 
-<div class="p-4 shadow">
+<div class="p-4 shadow fistslider">
     <div class="row align-items-center">
         <!-- Text Section -->
-        <div class="col-md-6 d-flex flex-column justify-content-center bg-light">
-            <h1 class="display-4">Laravel Developer</h1>
-            <p class="lead">Enhance your skills with Laravel development. Learn to build robust and scalable applications.</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sit amet nisl magna. Proin gravida, erat ut sollicitudin tempus, neque sapien pellentesque massa, a cursus urna ex non libero. Morbi tristique nisl sed risus volutpat, in lacinia urna eleifend. Sed tincidunt purus id orci accumsan, eget venenatis justo tincidunt.</p>
-            <p>More content here to make scrolling effect visible...</p>
+
+        <div class="col-md-6 d-flex flex-column justify-content-center fistslidersection">
+            <div style="padding-left: 90px;">
+                <h1 class="display-4 firsttitle">{{ $course->title }}</h1>
+                <p class="lead firstdescription">{{ $course->short_description }}</p>
+                <p class="lead firstshortdescription">{{ $course->description }}</p>
+                <p class="text-warning mb-1">★★★★★</p>
+            </div>
         </div>
 
         <!-- Image Section -->
-        <div class="col-md-6">
+        <!-- <div class="col-md-6">
             <div class="card mx-auto fixed-image-section">
-                <img src="https://via.placeholder.com/300" class="card-img-top" alt="Product">
+                <img src="{{ $course->thumbnail_image && file_exists(storage_path('app/public/' . $course->thumbnail_image)) 
+                        ? asset('storage/' . $course->thumbnail_image) 
+                        : 'https://via.placeholder.com/300' }}"
+                    class="card-img-top"
+                    alt="{{ $course->title }}">
                 <div class="card-body">
-                    <h6 class="card-title">Smartphone Case</h6>
+                    <h6 class="card-title">{{ $course->title }}</h6>
                     <p class="text-warning mb-1">★★★★★</p>
-                    <p class="card-text">$15.00</p>
+                    <p class="card-text">$${{ $course->price }}</p>
+                    <button class="btn btn-primary add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+        </div> -->
+
+        <div class="col-md-6">
+            <div id="scrolling-card" class="card mx-auto fixed-image-section">
+                <img src="{{ $course->thumbnail_image && file_exists(storage_path('app/public/' . $course->thumbnail_image)) 
+                ? asset('storage/' . $course->thumbnail_image) 
+                : 'https://via.placeholder.com/300' }}"
+                    class="card-img-top"
+                    alt="{{ $course->title }}">
+                <div class="card-body">
+                    <h6 class="card-title">{{ $course->title }}</h6>
+                    <p class="text-warning mb-1">★★★★★</p>
+                    <p class="card-text">$${{ $course->price }}</p>
                     <button class="btn btn-primary add-to-cart">Add to Cart</button>
                 </div>
             </div>
@@ -36,27 +59,28 @@
         <div class="col-md-6 mb-4">
             <div class="card shadow learn">
                 <div class="card-body">
-                    <h1 class="mb-4">What You'll Learn</h1>
+                    <h1 class="mb-4 secondh1">What You'll Learn</h1>
 
                     <!-- Collapsible Content -->
                     <div id="content" class="collapsed-content" style="max-height: 300px; overflow: hidden;">
-                        <div class="row">
-                            <!-- First Column -->
-                            <div class="col-md-6">
-                                <p class="card-text"><i class="fa fa-check" aria-hidden="true"></i> ChatGPT : Create content, synthesize information, and learn faster than ever with effective prompt engineering!</p>
-                                <p class="card-text"><i class="fa fa-check" aria-hidden="true"></i> Marketing : Generate targeted content with ChatGPT, capitalize on trends, create ads, newsletters, and media campaigns!</p>
-                                <p class="card-text"><i class="fa fa-check" aria-hidden="true"></i> Soft Skills : Improve your communication, leadership, problem-solving, and social skills with personalized ChatGPT feedback!</p>
-                                <p class="card-text"><i class="fa fa-check" aria-hidden="true"></i> AI Video Tools: Create an AI avatar that transforms scripts into presentations and quickly generate social media content!</p>
-                                <p class="card-text"><i class="fa fa-check" aria-hidden="true"></i> AI Writing Tools: Automate writing tasks, generate effective copy, and integrate with Google Sheets/Excel!</p>
-                                <p class="card-text"><i class="fa fa-check" aria-hidden="true"></i> Branding : Develop a visual identity, design logos, and generate content to establish a strong online presence!</p>
-                            </div>
-                            <!-- Second Column -->
-                            <div class="col-md-6">
-                                <p class="card-text"><i class="fa fa-check" aria-hidden="true"></i> Business : Streamline your workflow, automate repetitive tasks, and gain insights that help you make data-driven decisions for your business!</p>
-                                <p class="card-text"><i class="fa fa-check" aria-hidden="true"></i> Midjourney : Use prompts, parameters, and modifiers to create amazing images that showcase your personal style and creativity!</p>
-                                <p class="card-text"><i class="fa fa-check" aria-hidden="true"></i> DALL-E 3 : Create amazing photos from prompts, fill in or remove elements of images using inpainting and outpainting techniques!</p>
-                                <p class="card-text"><i class="fa fa-check" aria-hidden="true"></i> Multimodal : Achieve your goals faster with ChatGPT, manage your time, prioritize tasks, and create an optimized daily schedule!</p>
-                                <p class="card-text"><i class="fa fa-check" aria-hidden="true"></i> Productivity : Achieve your goals faster with ChatGPT, manage your time, prioritize tasks, and create an optimized daily schedule!</p>
+                        <div>
+                            <div class="row">
+                                <!-- Lessons from database -->
+
+                                <div class="col-md-6">
+                                    @foreach($lessons->take(ceil($lessons->count() / 2)) as $lesson)
+                                    <p class="card-text"><i class="fa fa-check" aria-hidden="true"></i>
+                                        {{ $lesson->title }}: {{ $lesson->content }}
+                                    </p>
+                                    @endforeach
+                                </div>
+                                <div class="col-md-6">
+                                    @foreach($lessons->skip(ceil($lessons->count() / 2)) as $lesson)
+                                    <p class="card-text"><i class="fa fa-check" aria-hidden="true"></i>
+                                        {{ $lesson->title }}: {{ $lesson->content }}
+                                    </p>
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -70,7 +94,37 @@
                             Show less <i class="fas fa-chevron-up me-2"></i>
                         </span>
                     </div>
+
+                    <!-- Add New Lesson Button -->
+                    <div class="text-left mt-3">
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addLessonModal">Add New Lesson</button>
+                    </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="addLessonModal" tabindex="-1" aria-labelledby="addLessonModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addLessonModalLabel">Add New Lesson</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Form to add lesson -->
+                <form action="{{ route('lessons.store', $course->id) }}" method="POST">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Lesson Title</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="content" class="form-label">Lesson Content</label>
+                        <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Lesson</button>
+                </form>
             </div>
         </div>
     </div>
@@ -86,17 +140,13 @@
                 <div class="row">
                     <!-- First Column -->
                     <div class="col-md-6">
-                        <p><i class="fa fa-video" aria-hidden="true"></i> 28 hours on-demand video</p>
-                        <p><i class="fa fa-newspaper" aria-hidden="true"></i> 21 articles</p>
-                        <p><i class="fa fa-download" aria-hidden="true"></i> 19 downloadable resources</p>
-                        <p><i class="fa fa-mobile" aria-hidden="true"></i> Access on mobile and TV</p>
+                        <p><strong>Category:</strong> {{ $categoryName }}</p>
+
                     </div>
 
                     <!-- Second Column -->
                     <div class="col-md-6">
-                        <p><i class="fa fa-closed-captioning" aria-hidden="true"></i> Closed captions</p>
-                        <p><i class="fa fa-headphones" aria-hidden="true"></i> Audio description in existing audio</p>
-                        <p><i class="fa fa-certificate" aria-hidden="true"></i> Certificate of completion</p>
+
                     </div>
                 </div>
             </div>
@@ -112,34 +162,27 @@
         <div class="col-md-6 mb-4">
             <div class="card">
                 <div class="card-body">
-
-                    <!-- ChatGPT Complete Guide Introduction -->
-
+                    @foreach($course->sections as $index => $section)
                     <div class="card-body">
-                        <h4>ChatGPT Complete Guide Introduction</h4>
-
                         <!-- Collapsible Content for Introduction -->
                         <div id="introContent" class="collapsed-content" style="max-height: 200px; overflow: hidden;">
-                            <p><i class="fa fa-info-circle" aria-hidden="true"></i> This introduction welcomes students to the "Complete AI Guide to 10x Your Productivity and Creativity" course, created in collaboration with Leap Year Learning. It emphasizes the value of research in saving time and underscores the course's aim to teach the most powerful AI tools for personal and professional projects.</p>
-                            <p><i class="fa fa-info-circle" aria-hidden="true"></i> Students will gain confidence and expertise in using rapidly evolving AI tools, with the course serving as a continually updated resource. The walkthrough covers course content, including sections on ChatGPT fundamentals and prompt engineering.</p>
-                            <p><i class="fa fa-info-circle" aria-hidden="true"></i> AI Topic: ChatGPT for Personal & Professional Growth</p>
-                            <p><i class="fa fa-info-circle" aria-hidden="true"></i> Intended Learners: Professionals, Students, AI Enthusiasts</p>
-                            <p><i class="fa fa-info-circle" aria-hidden="true"></i> Overall Lesson Theme: Introduction to a Comprehensive AI Productivity Course</p>
-                            <p><i class="fa fa-info-circle" aria-hidden="true"></i> Specific Skills Learned: Understanding course objectives, Learning about AI tools for productivity</p>
-                            <p><i class="fa fa-info-circle" aria-hidden="true"></i> Actionable Skill Acquired By End of Lesson: Ability to effectively use AI tools to enhance productivity</p>
-                            <p><i class="fa fa-info-circle" aria-hidden="true"></i> AI Tool Being Used: ChatGPT</p>
+
+                            <!-- <h5>{{ $section->title }}</h5>
+                            <p>{{ $section->content }}</p> -->
+                            <div class="sectiontitle">
+                                <h5 class="mb-2 " data-bs-toggle="collapse" href="#collapseSection{{ $index }}" role="button" aria-expanded="false" aria-controls="collapseSection{{ $index }}">
+                                    <i class="fa fa-video" aria-hidden="true"></i> {{ $section->title }}
+                                </h5>
+                            </div>
+                            <div class="collapse" id="collapseSection{{ $index }}">
+                                <p>{{ $section->content }}</p>
+                            </div>
                         </div>
+                    </div>
+                    @endforeach
 
-                        <!-- Show More/Less Button -->
-                        <!-- <div class="text-left mt-3">
-                            <span class="show-more-module--show-more--ObEu7" onclick="toggleContent('introContent')">
-                                Show more <i class="fas fa-chevron-down me-2"></i>
-                            </span>
-                            <span class="show-more-module--show-less--jkOoQ" onclick="toggleContent('introContent')" style="display: none;">
-                                Show less <i class="fas fa-chevron-up me-2"></i>
-                            </span>
-                        </div> -->
-
+                    <div class="text-left mt-3">
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSectionModal">Add New Section</button>
                     </div>
                 </div>
             </div>
@@ -148,21 +191,119 @@
     </div>
 </div>
 
+
+
+
+<div class="modal fade" id="addSectionModal" tabindex="-1" aria-labelledby="addSectionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addSectionModalLabel">Add New Section</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('section.store', $course->id) }}" method="POST">
+                    @csrf
+                    <div class="form-group">
+                        <label for="lesson_id">Lesson</label>
+                        <select name="lesson_id" id="lesson_id" class="form-control">
+                            @foreach ($lessons as $lesson)
+                            <option value="{{ $lesson->id }}">{{ $lesson->title }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Section Title</label>
+                        <input type="text" name="title" id="title" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="content">Section Content</label>
+                        <textarea name="content" id="content" class="form-control" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Section</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="container">
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div>
+                <div class="card-body">
+                    <h3 class="mb-4">Requirements</h3>
+                    @if(!empty($course->requirements))
+                    @foreach (explode("\n", $course->requirements) as $requirement)
+                    <p>
+                        <i class="fa fa-circle" aria-hidden="true" style="font-size: 10px; margin-right: 8px;"></i>
+                        {{ $requirement }}
+                    </p>
+                    @endforeach
+                    @else
+                    <p>No specific requirements listed for this course.</p>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+
 <div class="container">
     <div class="row">
         <div class="col-md-6 mb-4">
             <div>
                 <div class="card-body">
                     <h3 class="mb-4">Requirements</h3>
-                    <p>
-                        <i class="fa fa-circle" aria-hidden="true" style="font-size: 10px; margin-right: 8px;"></i> No prior experience with AI or programming is needed, but an eagerness to learn and explore new technologies is a plus!
-                    </p>
+
+                    <!-- Toggle Button -->
+                    <button id="toggleRequirements" class="btn btn-primary mb-3">Show Requirements</button>
+
+                    <!-- Requirements Section -->
+                    <div id="requirementsSection" style="display: none;">
+                        @if(!empty($course->requirements))
+                        @foreach (explode("\n", $course->requirements) as $requirement)
+                        <p>
+                            <i class="fa fa-circle" aria-hidden="true" style="font-size: 10px; margin-right: 8px;"></i>
+                            {{ $requirement }}
+                        </p>
+                        @endforeach
+                        @else
+                        <p>No specific requirements listed for this course.</p>
+                        @endif
+                    </div>
+
+                    <!-- Add Requirement Button -->
+                    <button id="addRequirement" class="btn btn-success mt-3">Add Requirement</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<div class="modal fade" id="addRequirementModal" tabindex="-1" aria-labelledby="addRequirementModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="addRequirementForm" method="POST" action="{{ route('courses.addRequirement', $course->id) }}">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addRequirementModalLabel">Add New Requirement</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="requirement" class="form-label">Requirement</label>
+                        <input type="text" name="requirement" id="requirement" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Requirement</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <div class="container">
     <div class="row">
         <div class="col-md-6 mb-4">
@@ -170,29 +311,36 @@
                 <div class="card-body">
                     <h3 class="mb-4">Description</h3>
                     <p>
-                        Have you heard about the amazing things people and businesses are doing with AI but you don’t know where to start?
+                        {{ $course->description }}
                     </p>
-                    <p>Are you ready to instantly create AI integrations, workflow automations, video scripts, presentations, online courses, targeted ads, social media posts, newsletters, podcasts, project outlines, E-books, personalized emails, job proposals, articles, lesson plans, language translations, SEO keywords, meal plans, custom schedules, summaries, startup ideas, market insights, mock interviews, personal bio's, essays, quizzes, E-commerce copy, content ideas, to-do lists, branding guidelines, financial plans, company slogans, contracts, creative stories, blogs, code,
-                        business plans, song lyrics, resumes, cover letters, tutorials, reviews, product descriptions, advertisements, and marketing campaigns?</p>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-@if(isset($course))
-<div class="course-detail">
-    <h2>{{ $course->title }}</h2>
-    <p>{{ $course->description }}</p>
-    <p>Category: {{ $course->category->name }}</p> <!-- Display category name -->
-    <p>Price: ${{ $course->price }}</p>
-</div>
-@else
-<p>Course details not found.</p>
-@endif
 
 
+<script>
+    // Toggle Requirements Section
+    document.getElementById('toggleRequirements').addEventListener('click', function() {
+        const requirementsSection = document.getElementById('requirementsSection');
+        if (requirementsSection.style.display === 'none') {
+            requirementsSection.style.display = 'block';
+            this.innerText = 'Hide Requirements';
+        } else {
+            requirementsSection.style.display = 'none';
+            this.innerText = 'Show Requirements';
+        }
+    });
 
+    // Show Add Requirement Modal
+    document.getElementById('addRequirement').addEventListener('click', function() {
+        const addRequirementModal = new bootstrap.Modal(document.getElementById('addRequirementModal'));
+        addRequirementModal.show();
+    });
+</script>
 
 <script>
     function toggleContent() {
@@ -211,11 +359,54 @@
             showLess.style.display = 'none';
         }
     }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const card = document.getElementById("scrolling-card");
+        const offsetTop = card.offsetTop; // Initial position of the card
+
+        window.addEventListener("scroll", function() {
+            const scrollY = window.scrollY;
+
+            // Update the card's position as the user scrolls
+            card.style.top = `${Math.max(250, scrollY - offsetTop + 250)}px`;
+        });
+    });
 </script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
 <style>
     .learn {
         margin-top: 7%;
+    }
+
+    .fistslider {
+        background-color: black;
+    }
+
+    .fistslidersection {
+        color: white;
+    }
+
+    .firsttitle {
+        font-weight: 700;
+    }
+
+    .firstdescription {
+        font-weight: 400;
+    }
+
+    .firstshortdescription {
+        font-weight: 300;
+    }
+
+    .secondh1 {
+        font-weight: 700;
+        font-size: 1.8rem;
+    }
+
+    .sectiontitle {
+        font-weight: 400;
+        font-size: 1.5rem;
     }
 
     /* .fixed-card {
@@ -225,18 +416,29 @@
         z-index: 1000;
         box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     } */
-
     .fixed-image-section {
-        position: fixed;
-        top: 100px;
-        /* Adjust this value to control the offset from the top */
-        right: 150px;
-        /* Keep the image section fixed on the right side */
-        z-index: 1000;
-        /* Ensure it stays on top of other elements */
+        position: absolute;
+        top: 180px;
+        /* Adjust as per your design */
         width: 18rem;
-        /* Set a fixed width to the image section */
+        z-index: 1000;
+        right: 150px;
+        /* Make it responsive */
+        transition: top 0.3s ease;
+        /* Smooth transition */
     }
+
+    /* .fixed-image-section {
+        position: fixed;
+        top: 100px; */
+    /* Adjust this value to control the offset from the top */
+    /* right: 150px; */
+    /* Keep the image section fixed on the right side */
+    /* z-index: 1000; */
+    /* Ensure it stays on top of other elements */
+    /* width: 18rem; */
+    /* Set a fixed width to the image section */
+    /* } */
 
     @media (max-width: 768px) {
         .fixed-image-section {
@@ -247,7 +449,5 @@
         }
     }
 </style>
-<style>
 
-</style>
 @endsection
