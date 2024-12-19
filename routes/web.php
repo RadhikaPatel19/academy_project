@@ -25,6 +25,10 @@ Route::post('/rate-course', [RatingController::class, 'store'])->name('course.ra
 Route::post('/courses/{id}/enroll', [CourseController::class, 'enrollInCourse'])->name('course.enroll');
 
 Route::get('/faq', [FAQController::class, 'index'])->name('faq.index');
+Route::post('/faq/submit', [FAQController::class, 'submit'])->name('faq.submit');
+Route::get('/faq/results', [FAQController::class, 'showResults'])->name('faq.results');
+
+Route::get('/quiz-result/{id}/download', [FAQController::class, 'downloadResult'])->name('quiz.result.download');
 // Route::get('/course/{id}', [CourseController::class, 'details'])->name('course.show');
 Route::get('/', function () {
     return redirect()->route(auth()->check() ? 'dashboard' : 'showLogin');

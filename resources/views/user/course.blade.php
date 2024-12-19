@@ -298,7 +298,7 @@
                     </div>
 
                     <!-- Add Requirement Button -->
-                    <button id="addRequirement" class="btn btn-success mt-3">Add Requirement</button>
+                    <button id="addRequirement" class="btn btn-success mt-3" style="display: flex;">Add Requirement</button>
                 </div>
             </div>
         </div>

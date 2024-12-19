@@ -9,6 +9,12 @@ use App\Models\User;
 
 class QuizController extends Controller
 {
+
+    public function index()
+    {
+        $quizResults = QuizResult::with('user')->paginate(10); // Eager load user data for displaying user info
+        return view('quiz.index', compact('quizResults'));
+    }
     // public function index()
     // {
     //     // $questions = Question::all();public function index()
@@ -71,63 +77,63 @@ class QuizController extends Controller
     //     ]);
     // }
 
-    public function index()
-    {
-        // Retrieve the paginated questions
-        $questions = Question::all();
+    // public function index()
+    // {
+    //     // Retrieve the paginated questions
+    //     $questions = Question::all();
 
-        // Retrieve stored answers from session
-        $storedAnswers = session('quiz_answers', []);
+    //     // Retrieve stored answers from session
+    //     $storedAnswers = session('quiz_answers', []);
 
-        return view('quiz.index', compact('questions', 'storedAnswers'));
-    }
+    //     return view('quiz.index', compact('questions', 'storedAnswers'));
+    // }
 
-    public function submit(Request $request)
-    {
-        $answers = $request->input('answers');  // Get the answers from the form submission
-        $score = 0;  // Initialize the score
-        $results = [];  // Initialize an array to store the results
-        $totalQuestions = Question::count();  // Get the total number of questions
-        $totalMarks = 60;  // Total marks set to 60 (for 30 questions)
+    // public function submit(Request $request)
+    // {
+    //     $answers = $request->input('answers');  // Get the answers from the form submission
+    //     $score = 0;  // Initialize the score
+    //     $results = [];  // Initialize an array to store the results
+    //     $totalQuestions = Question::count();  // Get the total number of questions
+    //     $totalMarks = 60;  // Total marks set to 60 (for 30 questions)
 
-        // Assuming each question is worth 2 points, so totalMarks = 30 * 2
-        $marksPerQuestion = 2;  // 2 points per question
+    //     // Assuming each question is worth 2 points, so totalMarks = 30 * 2
+    //     $marksPerQuestion = 2;  // 2 points per question
 
-        // Process answers for all questions
-        foreach ($answers as $id => $answer) {
-            $question = Question::find($id);  // Find the question by ID
-            $isCorrect = $question->correct_option == $answer;  // Check if the answer is correct
+    //     // Process answers for all questions
+    //     foreach ($answers as $id => $answer) {
+    //         $question = Question::find($id);  // Find the question by ID
+    //         $isCorrect = $question->correct_option == $answer;  // Check if the answer is correct
 
-            // Store the result for each question
-            $results[] = [
-                'question' => $question->question,
-                'options' => json_decode($question->options),  // Decode the question options from JSON
-                'correct' => $question->correct_option,
-                'chosen' => $answer,
-                'isCorrect' => $isCorrect,
-                'marksForThisQuestion' => $isCorrect ? $marksPerQuestion : 0,  // Calculate marks if correct
-            ];
+    //         // Store the result for each question
+    //         $results[] = [
+    //             'question' => $question->question,
+    //             'options' => json_decode($question->options),  // Decode the question options from JSON
+    //             'correct' => $question->correct_option,
+    //             'chosen' => $answer,
+    //             'isCorrect' => $isCorrect,
+    //             'marksForThisQuestion' => $isCorrect ? $marksPerQuestion : 0,  // Calculate marks if correct
+    //         ];
 
-            // Add marks for correct answers
-            if ($isCorrect) {
-                $score += $marksPerQuestion;  // Add 2 points for a correct answer
-            }
-        }
+    //         // Add marks for correct answers
+    //         if ($isCorrect) {
+    //             $score += $marksPerQuestion;  // Add 2 points for a correct answer
+    //         }
+    //     }
 
-        // Save the quiz result to the database with total_marks
-        QuizResult::create([
-            'user_id' => auth()->id(),
-            'score' => $score,
-            'total_marks' => $totalMarks,  // Ensure this is passed
-            'answers' => json_encode($results),
-        ]);
+    //     // Save the quiz result to the database with total_marks
+    //     QuizResult::create([
+    //         'user_id' => auth()->id(),
+    //         'score' => $score,
+    //         'total_marks' => $totalMarks,  // Ensure this is passed
+    //         'answers' => json_encode($results),
+    //     ]);
 
-        // Clear session answers after form submission
-        session()->forget('quiz_answers');
+    //     // Clear session answers after form submission
+    //     session()->forget('quiz_answers');
 
-        // Pass score, results, totalMarks, and totalQuestions to the view
-        return view('quiz.result', compact('results', 'score', 'totalMarks', 'totalQuestions'));
-    }
+    //     // Pass score, results, totalMarks, and totalQuestions to the view
+    //     return view('quiz.result', compact('results', 'score', 'totalMarks', 'totalQuestions'));
+    // }
 
     // public function dashboard()
     // {

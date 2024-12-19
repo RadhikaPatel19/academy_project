@@ -11,4 +11,9 @@ class QuizResult extends Model
     use HasFactory;
 
     protected $fillable = ['user_id', 'score', 'answers'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
