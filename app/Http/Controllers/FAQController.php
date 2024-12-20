@@ -47,20 +47,19 @@ class FAQController extends Controller
             // Store the result for each question
             $results[] = [
                 'question' => $question->question,
-                'options' => json_decode($question->options),  // Decode the question options from JSON
+                'options' => json_decode($question->options),
                 'correct' => $question->correct_option,
                 'chosen' => $answer,
                 'isCorrect' => $isCorrect,
-                'marksForThisQuestion' => $isCorrect ? $marksPerQuestion : 0,  // Calculate marks if correct
+                'marksForThisQuestion' => $isCorrect ? $marksPerQuestion : 0,
             ];
 
-            // Add marks for correct answers
+
             if ($isCorrect) {
-                $score += $marksPerQuestion;  // Add 2 points for a correct answer
+                $score += $marksPerQuestion;
             }
         }
 
-        // Save the quiz result to the database with total_marks
         $quizResult = QuizResult::create([
             'user_id' => auth()->id(),
             'score' => $score,
@@ -68,11 +67,8 @@ class FAQController extends Controller
             'answers' => json_encode($results),
         ]);
 
-        // Clear session answers after form submission
         session()->forget('quiz_answers');
         $user = Auth::user()->name;
-
-        // Pass score, results, totalMarks, totalQuestions, and questions to the view
         return view('user.faqresult', compact('results', 'score', 'totalMarks', 'totalQuestions', 'questions', 'user', 'quizResult'));
     }
 
@@ -92,7 +88,7 @@ class FAQController extends Controller
         // Generate the PDF
         $pdf = Pdf::loadView('user.quiz_result', $data);
 
-        // Return the PDF for download
+
         return $pdf->download('quiz_result.pdf');
     }
 }

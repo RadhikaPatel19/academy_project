@@ -6,6 +6,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\dashboardChartController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\FAQController;
@@ -29,6 +30,8 @@ Route::post('/faq/submit', [FAQController::class, 'submit'])->name('faq.submit')
 Route::get('/faq/results', [FAQController::class, 'showResults'])->name('faq.results');
 
 Route::get('/quiz-result/{id}/download', [FAQController::class, 'downloadResult'])->name('quiz.result.download');
+
+
 // Route::get('/course/{id}', [CourseController::class, 'details'])->name('course.show');
 Route::get('/', function () {
     return redirect()->route(auth()->check() ? 'dashboard' : 'showLogin');
@@ -40,14 +43,8 @@ Route::post('register', [AuthController::class, 'register'])->name('register');
 Route::get('login', [AuthController::class, 'showLogin'])->name('showLogin');
 Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+Route::middleware('auth')->get('/dashboard', [dashboardChartController::class, 'dashboard'])->name('dashboard');
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [QuizController::class, 'dashboard']);
-});
-Route::get('/dashboard', function () {
-    return view('dashboard'); // Make sure you have a 'dashboard.blade.php' view file
-})->name('dashboard');
-// Course Management
 Route::prefix('courses')->name('courses.')->group(function () {
     Route::get('/', [CourseController::class, 'index'])->name('index');
     Route::get('/create', [CourseController::class, 'create'])->name('create');
