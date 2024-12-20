@@ -28,12 +28,12 @@
 <div class="container my-5">
     <div class="row">
         @foreach ($courses as $course)
-        <div class="col-md-3">
+        <div class="col-md-3" style="padding-bottom: 12px;">
             <div class="card">
                 <img src="{{ $course->thumbnail_image && file_exists(storage_path('app/public/' . $course->thumbnail_image)) 
                         ? asset('storage/' . $course->thumbnail_image) 
                         : 'https://via.placeholder.com/300' }}"
-                    class="card-img-top"
+                    class="card-img-top fixed-thumbnail"
                     alt="{{ $course->title }}">
 
                 <a href="{{ route('user.details', ['id' => $course->id]) }}" class="text-decoration-none">
@@ -58,15 +58,6 @@
                                 @endif
                                 @endfor
                                 </p>
-                                <!-- <p>({{ $course->ratingsCount }} ratings)</p> -->
-                                <!-- Display average rating -->
-                                <!-- <p class="text-warning mb-1">
-                            @for ($i = 1; $i <= 5; $i++)
-                                <i class="fas fa-star{{ $i <= $course->ratings->avg('rating') ? '' : '-o' }}"></i>
-                                @endfor
-                        </p> -->
-
-                                <!-- Show price -->
                                 <p class="card-text">${{ $course->price }}</p>
 
                                 <!-- Show category name -->
@@ -87,6 +78,17 @@
 </div>
 
 
-
+<style>
+    .fixed-thumbnail {
+        width: 100%;
+        /* Make the image responsive to container size */
+        height: 200px;
+        /* Fixed height for all images */
+        object-fit: cover;
+        /* Ensures the image covers the box without distortion */
+        /* object-position: center; */
+        /* Centers the image inside the container */
+    }
+</style>
 
 @endsection
